@@ -1,2 +1,2 @@
 # github_finder
- This is an example project i did when i'm learning the React
+ This is an example project i made when i'm learning the React

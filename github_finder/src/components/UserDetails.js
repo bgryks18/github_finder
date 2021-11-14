@@ -1,23 +1,17 @@
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
 import {Link} from 'react-router-dom'
 import Loading from './Loading'
 import Repos from './Repos'
 
-export class UserDetails extends Component {
-    constructor(props){
-        super(props);
-    }
-    componentDidMount(){
-
-                this.props.propGetUser(this.props.match.params.login);
-                this.props.propGetUserRepos(this.props.match.params.login)
-
-    }
- 
-    render() {
-        const {propUserRepos} = this.props;
-        const {login,id,name,html_url,avatar_url,location,bio,blog,followers,following,public_repos} = this.props.propWhichUser;
-        if (this.props.propLoadingRightNow){
+const UserDetails = ({propGetUser,propGetUserRepos,match,propUserRepos,propWhichUser,propLoadingRightNow}) => {
+        useEffect(()=>{
+            propGetUser(match.params.login);
+            propGetUserRepos(match.params.login)
+    
+        },[])
+    
+        const {login,id,name,html_url,avatar_url,location,bio,blog,followers,following,public_repos} = propWhichUser;
+        if (propLoadingRightNow){
             return <Loading propWhichPage="kullanıcının sayfası"/>
         } else {
             return (
@@ -85,7 +79,6 @@ export class UserDetails extends Component {
             )
         } 
 
-    }
 }
 
 export default UserDetails

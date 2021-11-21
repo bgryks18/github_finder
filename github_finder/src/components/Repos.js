@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Repo from './Repo'
-
-const Repos = ({propRepo}) => {
-    return propRepo.map((item,index)=>{return <Repo propRepoItem={item} key={index}/>})
+import GithubContext from '../contexts/githubfinder/githubContext'
+const Repos = () => {
+    const githubContext = useContext(GithubContext);
+    const {repos} = githubContext;
+    return repos.map((item)=>{return <Repo propRepoItem={item} key={item.id}/>})
 }
 
 export default Repos

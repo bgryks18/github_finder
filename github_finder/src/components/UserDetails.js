@@ -1,17 +1,20 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import {Link} from 'react-router-dom'
 import Loading from './Loading'
 import Repos from './Repos'
+import GithubContext from '../contexts/githubfinder/githubContext'
 
-const UserDetails = ({propGetUser,propGetUserRepos,match,propUserRepos,propWhichUser,propLoadingRightNow}) => {
+const UserDetails = ({match}) => {
+    const githubContext = useContext(GithubContext);
+    const {getUser,loading,user,getUserRepos,repos} = githubContext;
         useEffect(()=>{
-            propGetUser(match.params.login);
-            propGetUserRepos(match.params.login)
+            getUser(match.params.login);
+            getUserRepos(match.params.login)
     
         },[])
     
-        const {login,id,name,html_url,avatar_url,location,bio,blog,followers,following,public_repos} = propWhichUser;
-        if (propLoadingRightNow){
+        const {login,id,name,html_url,avatar_url,location,bio,blog,followers,following,public_repos} = user;
+        if (loading){
             return <Loading propWhichPage="kullanıcının sayfası"/>
         } else {
             return (
@@ -69,7 +72,7 @@ const UserDetails = ({propGetUser,propGetUserRepos,match,propUserRepos,propWhich
                                 </div>
                                 </div>
                                 <ul className="list-group list-group-flush">
-                                    <Repos propRepo={propUserRepos} />
+                                    <Repos/>
                                 </ul>
                            </div>
                        </div>

@@ -1,19 +1,20 @@
-import React, { Component } from 'react'
+import React,{useContext,useEffect} from 'react'
 import Loading from './Loading'
-export class RepoDetails extends Component {
-    constructor(props){
-        super(props);
-    }
-    componentDidMount() {
-        this.props.propGetUserRepo(this.props.match.params.whichUser,this.props.match.params.whichRepo);
-}
+import GithubContext from '../contexts/githubfinder/githubContext'
+const RepoDetails = ({match}) => {
+    const githubContext = useContext(GithubContext);
+    const {getUserRepo,loading,repo,getUser,user,users} = githubContext;
+        useEffect(()=>{
+            getUser(match.params.whichUser);
+            getUserRepo(match.params.whichUser,match.params.whichRepo)
     
-    render() {
-            const {login,id,name,html_url,avatar_url,location,bio,blog,followers,following,public_repos} = this.props.propOwner;
-            if (this.props.propLoadingRightNow){
-                return <Loading propWhichPage={`${login} kişisinin repositorysi`}/>
+        },[])
+        const {login,id,name,html_url,avatar_url,location,bio,blog,followers,following,public_repos} = user;
+            if (loading){
+                return <Loading propWhichPage={`${match.params.whichUser} kişisinin repositorysi`}/>
             }
             else {
+                console.log(users.filter(item=>item.login===login).length)
                 return (
                     <div className="container my-2">
                        <div className="row">
@@ -45,16 +46,16 @@ export class RepoDetails extends Component {
                                <div className="card">
                                     <div className="card-body">
                                         <p className="card-text">
-                                                {this.props.propUserRepo.full_name}
+                                                {repo.full_name}
                                         </p>
                                         {
-                                            (this.props.propUserRepo.description)&&
+                                            (repo.description)&&
                                             <p className="card-text">
-                                                {this.props.propUserRepo.full_name}
+                                                {repo.description}
                                             </p>
                                         }
                                         <p className="text">
-                                            <a href={this.props.propUserRepo.html_url} className="btn btn-outline-secondary btn-sm"><i className="fas fa-eye"></i> View Repository</a>
+                                            <a href={repo.html_url} className="btn btn-outline-secondary btn-sm" target="_blank"><i className="fas fa-eye"></i> View Repository</a>
                                         </p>
                                     <div>
                                         <span className="badge badge-primary m-1">Followers: {followers}</span>
@@ -69,8 +70,6 @@ export class RepoDetails extends Component {
                     </div>
                 )
             }
-
-    }
-}
+        }
 
 export default RepoDetails

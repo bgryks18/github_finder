@@ -1,9 +1,12 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Alert from './Alert'
-
-const Search = ({propSetUsers,propSetAlert,propUser,propAlertMessage,propRemoveUsers}) => {
+import GithubContext from '../contexts/githubfinder/githubContext'
+import AlertContext from '../contexts/alert/alertContext'
+const Search = () => {
     const [keyword,setKeyword] = useState('');
-
+    const githubContext = useContext(GithubContext);
+    const {users,clearUsers,howmuch,setUsersList} = githubContext;
+    const {setAlert,removeAlert} = useContext(AlertContext);
     const onChange = (e) => {
         setKeyword(e.target.value) // girdiğimiz parametre direkt olarak keyword'e set edilecek değer olarak algılanır.
     }
@@ -11,21 +14,16 @@ const Search = ({propSetUsers,propSetAlert,propUser,propAlertMessage,propRemoveU
         e.preventDefault();
         const q = keyword.trim();
         if (!q){
-            propSetAlert("Lütfen boş bırakmayın.","danger")
+            setAlert("Lütfen boş bırakmayın.","danger")
         } else {
-            propSetUsers(q);
+            setUsersList(q,howmuch);
             setKeyword('');
+            removeAlert();
         }
-    }
-    const removeAlert = () => {
-        propSetAlert(null,null);
-    }
-    const removeUsers = () =>{
-        propRemoveUsers();
     }
         return (
         <>
-            <Alert propAlertResult={propAlertMessage} propRemoveAlert={removeAlert}/>
+            <Alert/>
             <div className="container my-2 w-50">
             <form onSubmit={onSubmit}>
                 <div className="input-group mb-3">
@@ -33,7 +31,7 @@ const Search = ({propSetUsers,propSetAlert,propUser,propAlertMessage,propRemoveU
                 <div className="input-group-append">
                     <button className="btn btn-outline-secondary" type="submit"><i className="fas fa-search"></i></button>
                     {
-                    propUser&&<button className="btn btn-outline-secondary" type="button" onClick={removeUsers}><i className="fas fa-trash-alt"></i></button>
+                    users.length>0&&<button className="btn btn-outline-secondary" type="button" onClick={()=>{clearUsers(); removeAlert()}}><i className="fas fa-trash-alt"></i></button>
                     }
                 </div>
                 </div>

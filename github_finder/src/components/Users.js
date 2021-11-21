@@ -1,33 +1,36 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import User from './User'
 import Loading from './Loading'
-const Users = (props) => {
-    if (props.propLoadingRightNow){
+import GithubContext from '../contexts/githubfinder/githubContext'
+const Users = () => {
+    const githubContext = useContext(GithubContext);
+    const {users,loading,howmuch,issent,keyw} = githubContext
+    if (loading){
         return <Loading propWhichPage="kullanıcı sayfası"/>
     }
-    if (props.propIsSent){
-        if (props.propUserList.length<1){
+    if (issent){
+        if (users.length<1){
             return (
                 <div className="container my-2">
-                <p className="text-center"><strong>{props.propKeyword}</strong> ile ilgili sonuç bulunamadı.</p>
+                <p className="text-center"><strong>{keyw}</strong> ile ilgili sonuç bulunamadı.</p>
              </div>
             ) 
         }
         else {
             return (
                 <div className="container my-2">
-                    <p className="text-center"><strong>{props.propKeyword}</strong> ile ilgili {props.propUserList.length} tane sonuç bulundu.</p>
+                    <p className="text-center"><strong>{keyw}</strong> ile ilgili {users.length} tane sonuç bulundu.</p>
                     <div className="row">
-                        {props.propUserList.map((item,index)=><User key={index} propUserItem={item}/>)}
+                        {users.map((item)=><User key={item.id} propUserItem={item}/>)}
                     </div>
                 </div>
             )
         }
     } else {
-        if (props.propHowMuchSent>0){
+        if (howmuch>0){
             return (
                 <div className="container my-2">
-                 <p className="text-center">Şu ana kadar topu topu {props.propHowMuchSent} kez veri ekledin.</p>
+                 <p className="text-center">Şu ana kadar topu topu {howmuch} kez veri ekledin.</p>
                 </div>
             )
         } else {
